@@ -1,0 +1,90 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+button,
+input {
+    font-size: 1rem;
+    padding: 0.25rem 0.5rem;
+}
+
+button {
+    border: none;
+}
+
+button:hover {
+    transform: scale(0.97);
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.9);
+}
+
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+html {
+    background-color: hsl(0, 0%, 50%);
+    font-size: 16px;
+}
+
+body {
+    height: 100vh;
+}
+
+body * {
+    /* border: 1px dotted red; */
+}
+
+nav,
+footer {}
+
+main {
+    position: relative;
+}
+
+.infoCont {
+    background-color: #fff1;
+    color: hsl(180, 100%, 50%,0.5);
+    position: absolute;
+    /* width: 15rem; */
+    /* height: 216px; */
+    left: 0.25rem;
+    top: 1.5rem;
+}
+
+.infoCont::before {
+    content: "Table1" ;
+    display: flex;
+    justify-content: space-around;
+}
+
+.infoCont > :first-child   {
+    font-weight: 600;
+    text-transform: capitalize;
+    /* text-align: center; */
+
+}
+
+.infoCont span {
+    display: inline-block;
+    width: 3.5rem;
+    height: 1.25rem;
+    text-align: center;
+    vertical-align: middle;
+    border: dotted 1px red;
+    border-collapse: collapse;
+}
+.infoCont span:first-of-type {
+    text-align: start;
+    width: 7rem;
+}
+
+
+
+
+.fade {
+    opacity: 0.6;
+}

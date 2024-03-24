@@ -1,0 +1,142 @@
+
+  if (e.key == "w") { cube.receiveForce("user", { x: +0, y: -1 }) }
+  if (e.key == "s") { cube.receiveForce("user", { x: +0, y: +1 }) }
+  if (e.key == "a") { cube.receiveForce("user", { x: -1, y: +0 }) }
+  if (e.key == "d") { cube.receiveForce("user", { x: +1, y: +0 }) }
+
+
+    get displayList() {
+        let list = []
+        for (const propName in this) {
+            let prop = this[propName]
+            if (prop["display"]) { list.push(prop) }
+        }
+        return list
+    }
+    displayInfo1() {
+        this.infoList.forEach(propName => {
+            let prop = cube[propName]
+            let { name, x, y } = prop
+            let wrapDiv = document.createElement("div")
+            let nameSpan = document.createElement("span")
+            nameSpan.innerText = name
+            nameSpan.classList.add("name")
+            let xSpan = document.createElement("span")
+            xSpan.innerText = x
+            xSpan.classList.add("x")
+            let ySpan = document.createElement("span")
+            ySpan.innerText = y
+            ySpan.classList.add("y")
+
+            wrapDiv.append(nameSpan, xSpan, ySpan)
+            el.infoCont.append(wrapDiv)
+            this.dispEls.push([xSpan, ySpan])
+
+        })
+    }
+    displayInfo2() {
+        this.infoList.forEach((propName, idx) => {
+            let prop = cube[propName]
+            let { name, x, y } = prop
+            let [xSpan, ySpan] = this.dispEls[idx]
+            xSpan.innerText = x.toFixed(1)
+            ySpan.innerText = y.toFixed(1)
+        })
+    }
+
+
+
+
+    matrix = function (m1 = { x, y }, m2 = { x, y }, fx = function (x, y) { }) {
+        return { x: fx(m1.x, m1.x), y: fx(m1.y, m2.y) }
+    }
+
+
+
+const el = {
+
+    cube: {
+        posit: {
+            x: document.querySelector(".info .posit .x"),
+            y: document.querySelector(".info .posit .y"),
+
+        },
+        veloc: {
+            x: document.querySelector(".info .veloc .x"),
+            y: document.querySelector(".info .veloc .y"),
+
+        },
+        accel: {
+            x: document.querySelector(".info .accel .x"),
+            y: document.querySelector(".info .accel .y"),
+
+        },
+        force: {
+            x: document.querySelector(".info .force .x"),
+            y: document.querySelector(".info .force .y"),
+
+        },
+    }
+}
+
+function fadeIfZero() {
+    // console.log("fadeIfZero" + " worked");
+    for (const prop in el.cube) {
+        let currProp = el.cube[prop]
+        // console.log("prop" + " worked");
+        for (const span in currProp) {
+            let currSpan = currProp[span] 
+            // console.log(currSpan);
+            currSpan.innerText == 0 ? currSpan.classList.add("fade") : currSpan.classList.remove("fade")
+        }
+    }
+}
+
+
+updateInfoEls() {
+    el.cube.posit.x.innerText = cube.posit.x.toFixed(1)
+    el.cube.posit.y.innerText = cube.posit.y.toFixed(1)
+    el.cube.veloc.x.innerText = cube.veloc.x.toFixed(1)
+    el.cube.veloc.y.innerText = cube.veloc.y.toFixed(1)
+    el.cube.accel.x.innerText = cube.accel.x.toFixed(1)
+    el.cube.accel.y.innerText = cube.accel.y.toFixed(1)
+    el.cube.force.x.innerText = cube.force.x.toFixed(1)
+    el.cube.force.y.innerText = cube.force.y.toFixed(1)
+}
+
+
+<!-- 
+<section class="info">
+
+    <div class="head">
+        <span class="name">name</span>
+        <span class="x">x</span>
+        <span class="y">y</span>
+    </div>
+
+    <div class="force">
+        <span class="name">force</span>
+        <span class="x">x</span>
+        <span class="y">y</span>
+    </div>
+
+    <div class="accel">
+        <span class="name">accel</span>
+        <span class="x">x</span>
+        <span class="y">y</span>
+    </div>
+
+    <div class="veloc">
+        <span class="name">veloc</span>
+        <span class="x">x</span>
+        <span class="y">y</span>
+    </div>
+
+    <div class="posit">
+        <span class="name">posit</span>
+        <span class="x">x</span>
+        <span class="y">y</span>
+    </div>
+
+</section>
+ -->
