@@ -1,4 +1,10 @@
 
+
+
+        let {propName:pname,displayName :dname,format: form } = dispObj
+        console.log(pname,dname,form);
+
+  
   if (e.key == "w") { cube.receiveForce("user", { x: +0, y: -1 }) }
   if (e.key == "s") { cube.receiveForce("user", { x: +0, y: +1 }) }
   if (e.key == "a") { cube.receiveForce("user", { x: -1, y: +0 }) }
