@@ -178,8 +178,8 @@ animate()
 
 
 document.addEventListener("keydown", (e) => {
-    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",].includes(e.key)) { e.preventDefault() }
-    // console.log(e.key);
+    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",1,2,3,4].includes(e.key)) { e.preventDefault() }
+    console.log(e.key);
 
     if (e.key == "a") { cube.forces.user.x-- }
     if (e.key == "d") { cube.forces.user.x++ }
@@ -190,6 +190,12 @@ document.addEventListener("keydown", (e) => {
     if (e.key == "ArrowRight") { cube.veloc.x += +10 }
     if (e.key == "ArrowUp") { cube.veloc.y += -10 }
     if (e.key == "ArrowDown") { cube.veloc.y += +10 }
+
+    
+    if (e.key == "1") { console.time("timer1")}
+    if (e.key == "2") { console.timeEnd("timer1")}
+    if (e.key == "3") { console.time("timer2")}
+    if (e.key == "4") { console.timeEnd("timer2")}
 })
 
 

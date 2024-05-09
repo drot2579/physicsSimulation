@@ -1,13 +1,3 @@
 {
-    "cSpell.words": [
-        "altit",
-        "Coef",
-        "coeffs",
-        "disp",
-        "uptd",
-        "veloc"
-    ],
-    "cSpell.enableFiletypes": [
-        "!yml"
-    ]
+    "liveServer.settings.port": 5501
 }
