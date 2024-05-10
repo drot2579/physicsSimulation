@@ -1,3 +1,4 @@
+const PI = Math.PI
 const canvas = document.querySelector("canvas")
 const cx = canvas.getContext("2d")
 canvas.width = 1280
@@ -9,123 +10,110 @@ function drawCanvas() {
 }
 drawCanvas()
 /* ---------- ----------> CANVAS CREATED <---------- ---------- */
-
-const el = { infoCont: document.querySelector(".infoCont") }
-
+/* TO-DO: TURN MINI ARROWS TO MATCH DIRECTION    */
+const el = {
+    vectorTable: document.querySelector(".vectorTable"),
+    velocityArrow: document.querySelector(".velocityArrow")
+}
 const anim = {
     frame: { count: 0, rate: 60 },
-    wait: { duration: 1, isActive: false }
 }
-
 const env = {
     gForce: { x: 0, y: 10 },
     friction: { coeffs: { air: 1, ground: 6 } },
-    timeCoef: 1
 }
 
 class Cube {
-    forces = {
-        user: { x: 0, y: 0 },
-
-    }
-    totalForce = { x: 0, y: 0 }
-    receiveForce(name, amount = { x: 0, y: 0 }) {
-        this.forces[name] = amount
-    }
     mass = 1
-    accel = { x: 0, y: 0 }
-    veloc = { x: 0, y: 0 }
-    posit = { x: 0, y: 0 }
-    get altit() { return canvas.height - this.height - this.posit.y }
-    title = { x: "X", y: "Y" }
-    len = 20
-    width = this.len
-    height = this.len
+    forces = { user: { x: 0, y: 0 }, }
+    totalForce = { x: 0, y: 0 }
+    acclrtn = { x: 0, y: 0 }
+    velocity = { x: 0, y: 0 }
+    position = { x: 0, y: 0 }
+    length = 20
+    width = this.length
+    height = this.length
+    get altitude() { return canvas.height - this.height - this.position.y }
 
-    displayList = [
-        ["property", "x", "y"],
-        { propName: "totalForce", displayName: "total force", format: "xy", },
-        { propName: "accel", displayName: "acceleration", format: "xy", },
-        { propName: "veloc", displayName: "velocity", format: "xy", },
-        { propName: "posit", displayName: "position", format: "xy", },
-        { propName: "altit", displayName: "altitude", format: "s", },
-        { propName: "mass", displayName: "mass", format: "s", },
-    ];
-
-    genDispEls() {
-        let div = document.createElement("div")
-        div.append(...(["properties", "x", "y"].map(str => {
-            let el = document.createElement("span")
-            el.innerText = str
-            return el
-        })))
-        el.infoCont.append(div)
-        this.displayList.forEach(dispObj => {
-            let wrapDiv = document.createElement("div")
-            let [nameSpan, xSpan, ySpan] = [1, 2, 3].map(() => document.createElement("span"))
-            nameSpan.innerText = dispObj.displayName
-            dispObj.els = { nameSpan, xSpan, ySpan }
-            wrapDiv.append(nameSpan, xSpan, ySpan)
-            el.infoCont.append(wrapDiv)
+    receiveForce(name, amount = { x: 0, y: 0 }) { this.forces[name] = amount }
+    renderVectorInfo() {
+        let vectorNames = ["totalForce", "acclrtn", "velocity", "position",]
+        let vectorMap = vectorNames.map((name) => {
+            return [name, {
+                x: document.querySelector(`.${name} .vectorX`),
+                y: document.querySelector(`.${name} .vectorY`),
+                arrowX: document.querySelector(`.${name} .arrowX`),
+                arrowY: document.querySelector(`.${name} .arrowY`),
+            }]
         })
+        let vectorEl = Object.fromEntries(vectorMap)
+        for (const name of vectorNames) {
+            let el = vectorEl[name]
+            let value = this[name]
+
+            el.x.innerText = value.x.toFixed(1)
+            let yInversed = -value.y
+            el.y.innerText = yInversed.toFixed(1)
+/* FIX-ME:  */
+            if (value.x > 0) { el.x.classList.add("positive"), el.x.classList.remove("negative"), el.arrowX.classList.remove("otherDirection") }
+            if (value.x < 0) { el.x.classList.remove("positive"), el.x.classList.add("negative"), el.arrowX.classList.add("otherDirection") }
+            if (value.x == 0) { el.x.classList.remove("positive"), el.x.classList.remove("negative") }
+
+            if (yInversed > 0) { el.y.classList.add("positive"), el.y.classList.remove("negative"), el.arrowY.classList.remove("otherDirection") }
+            if (yInversed < 0) { el.y.classList.remove("positive"), el.y.classList.add("negative"), el.arrowY.classList.remove("otherDirection") }
+            if (yInversed == 0) { el.y.classList.remove("positive"), el.y.classList.remove("negative") }
+
+        }
     }
-    uptdDispEls() {
-        this.displayList.forEach((dispObj) => {
-            let prop = this[dispObj.propName]
-            if (dispObj.format == "xy") {
-                dispObj.els.xSpan.innerText = prop.x.toFixed(1)
-                dispObj.els.ySpan.innerText = prop.y.toFixed(1)
-            }
-            if (dispObj.format == "s") {
-                dispObj.els.ySpan.innerText = prop.toFixed(1)
-            }
-        })
+
+    turnArrow() {
+        let { x, y } = this.velocity
+        y *= -1
+        let hip = Math.hypot(x, y)
+        let radian = Math.asin(y / hip)
+        let deg = (radian / PI) * 180
+        if(x < 0){deg = 180 - deg}
+        el.velocityArrow.style.rotate = -deg + "deg"
+        el.velocityArrow.style.fontSize = hip + "px"
+    
+
+
     }
 
     constructor(color) {
-        this.clr = color
+        this.color = color
     }
-    get willOverflow() {
-        return this.posit.y + this.veloc.y + this.height > canvas.height;
-    }
+    get willOverflow() { return this.position.y + this.velocity.y + this.height > canvas.height; }
     land() {
-        this.posit.y = canvas.height - this.height
-        this.veloc.y = 0
+        this.position.y = canvas.height - this.height
+        this.velocity.y = 0
+    }
+    brake() {
+        this.velocity.y = this.velocity.x = this.acclrtn.x = this.acclrtn.y = 0
+    }
+    free() {
+        let forces = this.forces
+        for (const forceName in forces) {
+            const force = forces[forceName]
+            force.x = force.y = 0
+        }
     }
 
     preventOverflow() {
-        let willOverflow =
-            this.posit.y + this.height + (this.veloc.y / anim.frame.rate) > canvas.height;
+        let willOverflow = this.position.y + this.height + (this.velocity.y / anim.frame.rate) > canvas.height;
         if (willOverflow) { this.land() };
     }
-    keepGround() {
-        // if (this.altit == 0 && this.totalForce.y > 0) { 
-        //   this.veloc.y = 0; this.accel.y = 0; this.totalForce.y = 0; }
-    }
-
     counterForce() {
-        if (this.altit == 0 && this.totalForce.y > 0) {
-
+        if (this.altitude == 0 && this.totalForce.y > 0) {
             this.receiveForce("counter", { x: 0, y: -this.totalForce.y })
         }
-
     }
-
     draw() {
         drawCanvas()
-        cx.fillStyle = this.clr
-        cx.fillRect(this.posit.x, this.posit.y, this.width, this.height)
+        cx.fillStyle = this.color
+        cx.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
-
-    handleFriction() {
-
-        let ground = this.forces.counter * env.friction.coeffs.ground
-
-
-
-        //  let air =  (this.veloc.x + this.veloc.y) * env.friction.coeffs.air 
-
-    }
+    handleFriction() { let ground = this.forces.counter * env.friction.coeffs.ground }
 
     setNewTotalForce() {
         let newForce = { x: 0, y: 0 }
@@ -138,47 +126,38 @@ class Cube {
     }
     updatePhys() {
         this.setNewTotalForce()
-        this.accel.x = this.totalForce.x / this.mass
-        this.accel.y = this.totalForce.y / this.mass
+        this.acclrtn.x = this.totalForce.x / this.mass
+        this.acclrtn.y = this.totalForce.y / this.mass
         /* ----------  -------- ---------- ---------- ----------*/
-        this.veloc.x += this.accel.x / anim.frame.rate
-        this.veloc.y += this.accel.y / anim.frame.rate
-        this.posit.x += this.veloc.x / anim.frame.rate
-        this.posit.y += this.veloc.y / anim.frame.rate
+        this.velocity.x += this.acclrtn.x / anim.frame.rate
+        this.velocity.y += this.acclrtn.y / anim.frame.rate
+        this.position.x += this.velocity.x / anim.frame.rate
+        this.position.y += this.velocity.y / anim.frame.rate
         this.preventOverflow()
         this.counterForce()
-        this.keepGround()
-
     }
-
     update() {
         this.draw()
         this.updatePhys()
-        cube.uptdDispEls()
+        this.renderVectorInfo()
+        this.turnArrow()
     }
-
 }
 
 const cube = new Cube("green")
-cube.genDispEls()
 cube.receiveForce("gravity", env.gForce)
 
 
 function animate() {
     anim.frame.count++
-    anim.wait.isActive ? setTimeout(() => {
-        window.requestAnimationFrame(animate)
-    }, anim.wait) : window.requestAnimationFrame(animate)
-
+     window.requestAnimationFrame(animate)
     cube.update()
 }
 
 animate()
 
-
-
 document.addEventListener("keydown", (e) => {
-    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",1,2,3,4].includes(e.key)) { e.preventDefault() }
+    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", 1, 2, 3, 4, "b", "f"].includes(e.key)) { e.preventDefault() }
     console.log(e.key);
 
     if (e.key == "a") { cube.forces.user.x-- }
@@ -186,60 +165,19 @@ document.addEventListener("keydown", (e) => {
     if (e.key == "w") { cube.forces.user.y-- }
     if (e.key == "s") { cube.forces.user.y++ }
 
-    if (e.key == "ArrowLeft") { cube.veloc.x += -10 }
-    if (e.key == "ArrowRight") { cube.veloc.x += +10 }
-    if (e.key == "ArrowUp") { cube.veloc.y += -10 }
-    if (e.key == "ArrowDown") { cube.veloc.y += +10 }
+    if (e.key == "ArrowLeft") { cube.velocity.x += -10 }
+    if (e.key == "ArrowRight") { cube.velocity.x += +10 }
+    if (e.key == "ArrowUp") { cube.velocity.y += -10 }
+    if (e.key == "ArrowDown") { cube.velocity.y += +10 }
 
-    
-    if (e.key == "1") { console.time("timer1")}
-    if (e.key == "2") { console.timeEnd("timer1")}
-    if (e.key == "3") { console.time("timer2")}
-    if (e.key == "4") { console.timeEnd("timer2")}
+    if (e.key == "b") { cube.brake() }
+    if (e.key == "f") { cube.free() }
+
+    if (e.key == "1") { console.time("timer1") }
+    if (e.key == "2") { console.timeEnd("timer1") }
+    if (e.key == "3") { console.time("timer2") }
+    if (e.key == "4") { console.timeEnd("timer2") }
 })
 
-
-
-
-
-
-
-let xx
-function genDispEls(list = [head= ["","",""],{propName:"",displayName:"",format:"xy"|| "s"}]) {
-    let head = list.unshift()
-    let headWrap = document.createElement("div")
-    headWrap.append(...((list.shift()).map(str => {
-        let newEl = document.createElement("span")
-        newEl.innerText = str
-        return newEl
-    })))
-    el.infoCont.append(headWrap)
-    list.forEach(dispObj => {
-        let wrapDiv = document.createElement("div")
-
-
-
-
-        /* 
-        let [nameSpan, xSpan, ySpan] = [1, 2, 3].map(() => document.createElement("span"))
-        nameSpan.innerText = dispObj.displayName
-        wrapDiv.append(nameSpan, xSpan, ySpan)
-        el[]
-        dispObj.els = { nameSpan, xSpan, ySpan }
-        el.infoCont.append(wrapDiv) */
-    })
-}
-genDispEls(cube.displayList)
-
-function uptdDispEls() {
-    list.forEach((dispObj) => {
-        let prop = this[dispObj.propName]
-        if (dispObj.format == "xy") {
-            dispObj.els.xSpan.innerText = prop.x.toFixed(1)
-            dispObj.els.ySpan.innerText = prop.y.toFixed(1)
-        }
-        if (dispObj.format == "s") {
-            dispObj.els.ySpan.innerText = prop.toFixed(1)
-        }
-    })
-}
+// 2PI = 360deg
+// PI = 180deg

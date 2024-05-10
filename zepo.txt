@@ -1,0 +1,51 @@
+rightArrow >> &#10132;   
+   
+            <!-- vectors -->
+            <div class="head">
+                <span class="name">property</span>
+                <span class="vectorX">x</span>
+                <span class="vectorY">y</span>
+            </div>
+            <div class="position">
+                <span class="name">position</span>
+                <span class="vectorX"></span>
+                <span class="vectorY"></span>
+            </div>
+            <div class="totalForce">
+                <span class="name">total force</span>
+                <span class="vectorX"></span>
+                <span class="vectorY"></span>
+            </div>
+            <div class="acclrtn">
+                <span class="name">acceleration</span>
+                <span class="vectorX"></span>
+                <span class="vectorY"></span>
+            </div>
+            <div class="velocity">
+                <span class="name">velocity</span>
+                <span class="vectorX"></span>
+                <span class="vectorY"></span>
+            </div>
+        </div>
+
+
+
+.vectorTable::before {
+    content: "Vector Table";
+    display: flex;
+    justify-content: space-around;
+}
+
+    keepGround() {
+        // if (this.altit == 0 && this.totalForce.y > 0) { 
+        //   this.veloc.y = 0; this.accel.y = 0; this.totalForce.y = 0; }
+    }
+
+    function animate() {
+    anim.frame.count++
+    anim.wait.isActive ? setTimeout(() => {
+        window.requestAnimationFrame(animate)
+    }, anim.wait) : window.requestAnimationFrame(animate)
+
+    cube.update()
+}
