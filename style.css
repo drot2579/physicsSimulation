@@ -79,6 +79,12 @@ span {
     justify-content: space-evenly;
     align-items: center;
 }
+
+.arrowValue  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .vectorTable .num {
     width: 3rem;
 }
@@ -93,6 +99,12 @@ span {
 }
 .arrowY {
     rotate:  -90deg;
+    &.otherDirection {
+        rotate: -270deg;
+    }
+}
+.arrowY , .arrowX {
+    font-size: 1.5rem;
 }
 .positive {
     color: #0f0;

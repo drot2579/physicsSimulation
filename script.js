@@ -4,11 +4,18 @@ const cx = canvas.getContext("2d")
 canvas.width = 1280
 canvas.height = 720
 canvas.color = "black"
+let wn = 100
+let w1 = canvas.width / 20
+let wi = 0
 function drawCanvas() {
+
     cx.fillStyle = canvas.color
     cx.fillRect(0, 0, canvas.width, canvas.height)
+
 }
 drawCanvas()
+let zeros = Array(10).fill(0)
+
 /* ---------- ----------> CANVAS CREATED <---------- ---------- */
 /* TO-DO: TURN MINI ARROWS TO MATCH DIRECTION    */
 const el = {
@@ -29,11 +36,11 @@ class Cube {
     totalForce = { x: 0, y: 0 }
     acclrtn = { x: 0, y: 0 }
     velocity = { x: 0, y: 0 }
-    position = { x: 0, y: 0 }
     length = 20
     width = this.length
     height = this.length
     get altitude() { return canvas.height - this.height - this.position.y }
+    position = { x: (canvas.width + this.width) / 2, y: (canvas.height + this.height) / 2 }
 
     receiveForce(name, amount = { x: 0, y: 0 }) { this.forces[name] = amount }
     renderVectorInfo() {
@@ -52,16 +59,38 @@ class Cube {
             let value = this[name]
 
             el.x.innerText = value.x.toFixed(1)
-            let yInversed = -value.y
+            let yInversed = value.y * -1
             el.y.innerText = yInversed.toFixed(1)
-/* FIX-ME:  */
-            if (value.x > 0) { el.x.classList.add("positive"), el.x.classList.remove("negative"), el.arrowX.classList.remove("otherDirection") }
-            if (value.x < 0) { el.x.classList.remove("positive"), el.x.classList.add("negative"), el.arrowX.classList.add("otherDirection") }
-            if (value.x == 0) { el.x.classList.remove("positive"), el.x.classList.remove("negative") }
+            /* FIX-ME:  */
+            if (value.x > 0) {
+                el.x.classList.add("positive")
+                el.x.classList.remove("negative")
+                el.arrowX.classList.remove("otherDirection")
+            }
+            if (value.x < 0) {
+                el.x.classList.remove("positive")
+                el.x.classList.add("negative")
+                el.arrowX.classList.add("otherDirection")
+            }
+            if (value.x == 0) {
+                el.x.classList.remove("positive")
+                el.x.classList.remove("negative")
+            }
 
-            if (yInversed > 0) { el.y.classList.add("positive"), el.y.classList.remove("negative"), el.arrowY.classList.remove("otherDirection") }
-            if (yInversed < 0) { el.y.classList.remove("positive"), el.y.classList.add("negative"), el.arrowY.classList.remove("otherDirection") }
-            if (yInversed == 0) { el.y.classList.remove("positive"), el.y.classList.remove("negative") }
+            if (yInversed > 0) {
+                el.y.classList.add("positive")
+                el.y.classList.remove("negative")
+                el.arrowY.classList.remove("otherDirection")
+            }
+            if (yInversed < 0) {
+                el.y.classList.remove("positive")
+                el.y.classList.add("negative")
+                el.arrowY.classList.add("otherDirection")
+            }
+            if (yInversed == 0) {
+                el.y.classList.remove("positive")
+                el.y.classList.remove("negative")
+            }
 
         }
     }
@@ -72,18 +101,14 @@ class Cube {
         let hip = Math.hypot(x, y)
         let radian = Math.asin(y / hip)
         let deg = (radian / PI) * 180
-        if(x < 0){deg = 180 - deg}
+        if (x < 0) { deg = 180 - deg }
         el.velocityArrow.style.rotate = -deg + "deg"
         el.velocityArrow.style.fontSize = hip + "px"
-    
-
-
     }
 
-    constructor(color) {
-        this.color = color
-    }
-    get willOverflow() { return this.position.y + this.velocity.y + this.height > canvas.height; }
+    constructor(color) { this.color = color }
+
+    get willOverflow() { return this.position.y + this.velocity.y + this.height > canvas.height }
     land() {
         this.position.y = canvas.height - this.height
         this.velocity.y = 0
@@ -91,12 +116,16 @@ class Cube {
     brake() {
         this.velocity.y = this.velocity.x = this.acclrtn.x = this.acclrtn.y = 0
     }
-    free() {
-        let forces = this.forces
-        for (const forceName in forces) {
-            const force = forces[forceName]
-            force.x = force.y = 0
-        }
+    balance() {
+        let forces =  this.getTotalForces()
+        
+        let userForce = {x: forces.x / 2, y: forces.y / 2}
+
+        // let forces = this.forces
+        // for (const forceName in forces) {
+        //     const force = forces[forceName]
+        //     force.x = force.y = 0
+        // }
     }
 
     preventOverflow() {
@@ -106,23 +135,30 @@ class Cube {
     counterForce() {
         if (this.altitude == 0 && this.totalForce.y > 0) {
             this.receiveForce("counter", { x: 0, y: -this.totalForce.y })
+        } else {
+
+            this.receiveForce("counter", { x: 0, y: 0 })
         }
     }
     draw() {
+
         drawCanvas()
         cx.fillStyle = this.color
         cx.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
     handleFriction() { let ground = this.forces.counter * env.friction.coeffs.ground }
-
+getTotalForces(){
+    let totalForce = { x: 0, y: 0 }
+    for (const force in this.forces) {
+        totalForce.x += this.forces[force].x
+        totalForce.y += this.forces[force].y
+    }
+    return totalForce
+}
     setNewTotalForce() {
-        let newForce = { x: 0, y: 0 }
-        for (const force in this.forces) {
-            newForce.x += this.forces[force].x
-            newForce.y += this.forces[force].y
-        }
-        this.totalForce.x = newForce.x
-        this.totalForce.y = newForce.y
+        let totalForce = this.getTotalForces()
+        this.totalForce.x = totalForce.x
+        this.totalForce.y = totalForce.y
     }
     updatePhys() {
         this.setNewTotalForce()
@@ -150,7 +186,7 @@ cube.receiveForce("gravity", env.gForce)
 
 function animate() {
     anim.frame.count++
-     window.requestAnimationFrame(animate)
+    window.requestAnimationFrame(animate)
     cube.update()
 }
 
@@ -171,7 +207,7 @@ document.addEventListener("keydown", (e) => {
     if (e.key == "ArrowDown") { cube.velocity.y += +10 }
 
     if (e.key == "b") { cube.brake() }
-    if (e.key == "f") { cube.free() }
+    if (e.key == "f") { cube.balance() }
 
     if (e.key == "1") { console.time("timer1") }
     if (e.key == "2") { console.timeEnd("timer1") }
