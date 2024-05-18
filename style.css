@@ -91,10 +91,10 @@ span {
 .vectorTable .name {
     width: 6rem;
 }
-.vectorTable .valueX {
+.vectorTable .vectorX {
     width: 5rem;
 }
-.vectorTable .valueY {
+.vectorTable .vectorY {
     width: 5rem;
 }
 .arrowY {

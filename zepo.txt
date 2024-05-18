@@ -1,3 +1,29 @@
+const myFillRect = (ox, oy, sx, sy) => {
+    cx.fillStyle = "yellowgreen"
+    cx.fillRect(ox, oy + canvas.height, sx, -sy)
+
+}
+
+
+let test = {
+    vector: new Vector(100, 200),
+    vectors: [
+        new Vector(+1, +1),
+        new Vector(-1, +1),
+        new Vector(-1, -1),
+        new Vector(+1, -1),
+    ],
+    log() { for (const vector of this.vectors) { console.log(vector.angle, vector.rad, vector.deg); } }
+}
+
+
+  {position,size,velocity,acceleration,color}
+        this.position = position;
+        this.size = size;
+        this.velocity = velocity;
+        this.acceleration = acceleration;
+        this.color = color;
+
 <-------------------------------->
 LEFT ARROW
 ←
@@ -78,28 +104,28 @@ rightArrow >> &#10132;
             <!-- vectors -->
             <div class="head">
                 <span class="name">property</span>
-                <span class="valueX">x</span>
-                <span class="valueY">y</span>
+                <span class="vectorX">x</span>
+                <span class="vectorY">y</span>
             </div>
             <div class="position">
                 <span class="name">position</span>
-                <span class="valueX"></span>
-                <span class="valueY"></span>
+                <span class="vectorX"></span>
+                <span class="vectorY"></span>
             </div>
             <div class="totalForce">
                 <span class="name">total force</span>
-                <span class="valueX"></span>
-                <span class="valueY"></span>
+                <span class="vectorX"></span>
+                <span class="vectorY"></span>
             </div>
             <div class="acclrtn">
                 <span class="name">acceleration</span>
-                <span class="valueX"></span>
-                <span class="valueY"></span>
+                <span class="vectorX"></span>
+                <span class="vectorY"></span>
             </div>
             <div class="velocity">
                 <span class="name">velocity</span>
-                <span class="valueX"></span>
-                <span class="valueY"></span>
+                <span class="vectorX"></span>
+                <span class="vectorY"></span>
             </div>
         </div>
 
