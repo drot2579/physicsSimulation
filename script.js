@@ -1,7 +1,7 @@
 const PI = Math.PI
 const canvas = document.querySelector("canvas")
 const cx = canvas.getContext("2d")
-canvas.width = 1280
+canvas.width = 1200
 canvas.height = 720
 canvas.color = "black"
 let wn = 100
@@ -17,7 +17,6 @@ drawCanvas()
 let zeros = Array(10).fill(0)
 
 /* ---------- ----------> CANVAS CREATED <---------- ---------- */
-/* TO-DO: TURN MINI ARROWS TO MATCH DIRECTION    */
 const el = {
     vectorTable: document.querySelector(".vectorTable"),
     velocityArrow: document.querySelector(".velocityArrow")
@@ -47,8 +46,8 @@ class Cube {
         let vectorNames = ["totalForce", "acclrtn", "velocity", "position",]
         let vectorMap = vectorNames.map((name) => {
             return [name, {
-                x: document.querySelector(`.${name} .vectorX`),
-                y: document.querySelector(`.${name} .vectorY`),
+                x: document.querySelector(`.${name} .valueX`),
+                y: document.querySelector(`.${name} .valueY`),
                 arrowX: document.querySelector(`.${name} .arrowX`),
                 arrowY: document.querySelector(`.${name} .arrowY`),
             }]

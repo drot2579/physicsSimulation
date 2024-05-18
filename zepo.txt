@@ -78,28 +78,28 @@ rightArrow >> &#10132;
             <!-- vectors -->
             <div class="head">
                 <span class="name">property</span>
-                <span class="vectorX">x</span>
-                <span class="vectorY">y</span>
+                <span class="valueX">x</span>
+                <span class="valueY">y</span>
             </div>
             <div class="position">
                 <span class="name">position</span>
-                <span class="vectorX"></span>
-                <span class="vectorY"></span>
+                <span class="valueX"></span>
+                <span class="valueY"></span>
             </div>
             <div class="totalForce">
                 <span class="name">total force</span>
-                <span class="vectorX"></span>
-                <span class="vectorY"></span>
+                <span class="valueX"></span>
+                <span class="valueY"></span>
             </div>
             <div class="acclrtn">
                 <span class="name">acceleration</span>
-                <span class="vectorX"></span>
-                <span class="vectorY"></span>
+                <span class="valueX"></span>
+                <span class="valueY"></span>
             </div>
             <div class="velocity">
                 <span class="name">velocity</span>
-                <span class="vectorX"></span>
-                <span class="vectorY"></span>
+                <span class="valueX"></span>
+                <span class="valueY"></span>
             </div>
         </div>
 
