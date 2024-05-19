@@ -14,7 +14,7 @@ let canvasWidthMeter = canvasWidth / pxPm;
 let canvasHeightMeter = canvasHeight / pxPm;
 const draw = (color = "green", args = [0, 0, 1, 1]) => {
     cx.fillStyle = color;
-    args.forEach((arg,idx) => args[idx] = arg * pxPm)
+    args.forEach((arg, idx) => args[idx] = arg * pxPm)
     cx.fillRect(args[0], canvasHeight - args[1], args[2], -args[3])
 }
 const refreshCanvas = () => draw(canvasColor, [0, 0, canvasWidth, canvasHeight])
@@ -53,29 +53,20 @@ class Rectangle {
     totalForceReceived = new Vector();
     acceleration = new Vector();
     energy = {};
-    constructor( ) {
-        this.size =  new Vector(1, 1);
-        this.velocity =  new Vector(5, 25);
-        this.position =  new Vector(0, 10);
-        this.density =  1;
-        this.elasticity =  0.4;
-        this.color =  "#111";
+    constructor() {
+        this.size = new Vector(1, 1);
+        this.velocity = new Vector(5, 25);
+        this.position = new Vector(0, 10);
+        this.density = 1;
+        this.elasticity = 0.4;
+        this.color = "#111";
         this.volume = this.size.x * this.size.y;
         this.mass = this.volume * this.density;
     }
-    draw() {
-        draw(this.color, [...this.position.values, ...this.size.values])
-    }
+    draw() {draw(this.color, [...this.position.values, ...this.size.values])}
     bounceX() { this.velocity.x *= -this.elasticity }
     bounceY() { this.velocity.y *= -this.elasticity }
-    update() {
-        this.draw()
-
-        this.totalForceReceived = Vector.sum(this.forces)
-        this.acceleration = this.totalForceReceived.divideTo(this.mass)
-        this.velocity.add(this.acceleration.divideTo(frameRate))
-        this.position.add(this.velocity.divideTo(frameRate))
-
+    canvasCollision() {
         if (this.position.y < 0) { this.position.y = 0; this.bounceY() }
         if (this.position.x < 0) { this.position.x = 0; this.bounceX(); }
         if (this.position.y + this.size.y > canvasHeightMeter) {
@@ -85,10 +76,23 @@ class Rectangle {
             this.position.x = canvasWidth / pxPm - this.size.x; this.bounceX();
         }
     }
+    mainCalculations() {
+        this.totalForceReceived = Vector.sum(this.forces)
+        this.acceleration = this.totalForceReceived.divideTo(this.mass)
+        this.velocity.add(this.acceleration.divideTo(frameRate))
+        this.position.add(this.velocity.divideTo(frameRate))
+    }
+    update() {
+        this.mainCalculations()
+        this.draw()
+        this.canvasCollision()
+    }
 }
 
-let r1 = new Rectangle([5,5]);
-let r2 = new Rectangle([10,10])
+let r1 = new Rectangle();
+let r2 = new Rectangle()
+r2.color = "#2020aa";
+r2.size.set([3, 5])
 
 function animate() {
     refreshCanvas()
