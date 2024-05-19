@@ -1,3 +1,11 @@
+let watch = {
+    get velocityX() { return r1.velocity.x.toFixed(1) },
+    get velocityY() { return r1.velocity.y.toFixed(1) },
+    get positionX() { return r1.position.x.toFixed(1) },
+    get positionY() { return r1.position.y.toFixed(1) },
+}
+
+
 const myFillRect = (ox, oy, sx, sy) => {
     cx.fillStyle = "yellowgreen"
     cx.fillRect(ox, oy + canvas.height, sx, -sy)
