@@ -44,13 +44,18 @@ class Vector {
     multiplyTo(n) { return new Vector(this.x * n, this.y * n) }
     divide(num) { this.x /= num; this.y /= num; }
     divideTo(n) { return new Vector(this.x / n, this.y / n) }
+
+    fixedTo(n) { return new Vector((this.x).toFixed(n), (this.y).toFixed(n)) }
 }
 
 let frameRate = 60;
 let gForce = new Vector(0, -10)
 class Rectangle {
-    forces = [gForce];
-    totalForceReceived = new Vector();
+    forces = {
+        gravity: gForce,
+        user: new Vector(),
+    };
+    totalForce = new Vector();
     acceleration = new Vector();
     energy = {};
     constructor() {
@@ -72,13 +77,13 @@ class Rectangle {
         if (this.position.y + this.size.y > canvasHeightMeter) {
             this.position.y = canvasHeightMeter - this.size.y; this.bounceY();
         }
-        if (this.position.x + this.size.x > canvasWidth / pxPm) {
-            this.position.x = canvasWidth / pxPm - this.size.x; this.bounceX();
+        if (this.position.x + this.size.x > canvasWidthMeter) {
+            this.position.x = canvasWidthMeter - this.size.x; this.bounceX();
         }
     }
     mainCalculations() {
-        this.totalForceReceived = Vector.sum(this.forces)
-        this.acceleration = this.totalForceReceived.divideTo(this.mass)
+        this.totalForce = Vector.sum(Object.values(this.forces))
+        this.acceleration = this.totalForce.divideTo(this.mass)
         this.velocity.add(this.acceleration.divideTo(frameRate))
         this.position.add(this.velocity.divideTo(frameRate))
     }
@@ -86,6 +91,16 @@ class Rectangle {
         this.mainCalculations()
         this.draw()
         this.canvasCollision()
+    }
+    renderInfo() {
+        let {position,velocity,acceleration,forces: {gravity,user},totalForce} = this;
+        let items = {position,velocity,acceleration,gravity,user,totalForce}
+        
+        for (const name in items) {
+            const vector = items[name].fixedTo(2);
+            document.querySelector(`.r1>.row.${name}>.x`).innerText = vector.x
+            document.querySelector(`.r1>.row.${name}>.y`).innerText = vector.y
+        }
     }
 }
 
@@ -99,17 +114,23 @@ function animate() {
     window.requestAnimationFrame(animate)
     r1.update()
     r2.update()
+    r1.renderInfo()
 }
 animate()
 
-let keyVelocity = 10;
+let keyValue = 10;
 document.body.addEventListener("keydown", (e) => {
-    console.log(e.key);
-    if (e.key == "a") { r1.velocity.add([-keyVelocity, 0]) }
-    if (e.key == "d") { r1.velocity.add([+keyVelocity, 0]) }
-    if (e.key == "s") { r1.velocity.add([0, -keyVelocity]) }
-    if (e.key == "w") { r1.velocity.add([0, +keyVelocity]) }
     if (e.key == " ") { r1.velocity.set([0, 0]) }
+    if (e.key == "a") { r1.forces.user.x = -keyValue}
+    if (e.key == "d") { r1.forces.user.x = +keyValue}
+    if (e.key == "s") { r1.forces.user.y =  -keyValue}
+    if (e.key == "w") { r1.forces.user.y =  +keyValue}
+})
+document.body.addEventListener("keyup", (e) => {
+    if (e.key == "a") { r1.forces.user.x = 0}
+    if (e.key == "d") { r1.forces.user.x = 0}
+    if (e.key == "s") { r1.forces.user.y =  0}
+    if (e.key == "w") { r1.forces.user.y =  0}
 })
 
 
