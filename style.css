@@ -1,6 +1,4 @@
-body * {
-    /* border: 1px dotted red; */
-}
+
 * {
     margin: 0;
     padding: 0;
@@ -22,7 +20,7 @@ button {
     }
 }
 html {
-    background-color: hsl(0, 0%, 25%);
+    background-color: hsl(0, 0%, 15%);
     font-size: 18px;
 }
 body {
@@ -37,108 +35,40 @@ main {
 /* -------------------------------------------------------------------------- */
 span {
     display: inline-block;
+    transition: 250ms;
 }
-.vectorTable {
-    color: hsl(180, 100%, 50%);
-    z-index: 1;
-}
-
-.vectorTable .position {
-    opacity: 1;
-    position: absolute;
-    bottom: 0;
-    left: 500px;
-}
-.vectorTable .totalForce {
-    opacity: 1;
-    position: absolute;
-    top: 0;
-    left: 500px;
-}
-.vectorTable .acclrtn {
-    opacity: 1;
-    position: absolute;
-    top: 2rem;
-    left: 500px;
-}
-.vectorTable .velocity {
-    opacity: 1;
-    position: absolute;
-    top: 200px;
-    left: 500px;
-}
-
-.vectorTable  {
-    height: 1.5rem;
-    text-align: center;
-    border: dotted 1px #444;
-}
-
-.vector {
+ .tables {
     display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-}
-
-.arrowValue  {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.vectorTable .num {
-    width: 3rem;
-}
-.vectorTable .name {
-    width: 6rem;
-}
-.vectorTable .vectorX {
-    width: 5rem;
-}
-.vectorTable .vectorY {
-    width: 5rem;
-}
-.arrowY {
-    rotate:  -90deg;
-    &.otherDirection {
-        rotate: -270deg;
+    flex-direction: row;
+    & .table {
+        width: unset;
+        color: aqua;
+        
     }
-}
-.arrowY , .arrowX {
-    font-size: 1.5rem;
-}
-.positive {
+    & .name {
+        width: 6rem ;
+        text-align: right;
+        text-transform: capitalize;
+    }
+    & .x {
+        width: 3rem;
+    }
+    & .y {
+        width: 3rem;
+        
+    }
+ }
+
+ .pos {
     color: #0f0;
-}
-.negative {
-    color: #f00;
-}
-.otherDirection {
-    rotate: 180deg;
-}
-.vectorTable > .head  {
-    font-weight: 600;
-    text-transform: capitalize;
-    text-align: center;
-    display: none;
-}
-
-.velocityArrow {
-    font-size: 5rem;
-    color: hsl(330, 100%, 50%);
-    position: absolute;
-    left: 400px;
-    top: 275px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 400px;
-    width: 400px;
-    opacity: 0.7;
-    text-align: center;
-    vertical-align: middle;
-
-}
+ }
+ .neg {
+    color: rgb(255, 0, 0);
+ }
 
 .fade {
     /* opacity: 0.6;     */
+}
+body * {
+    border: 1px dotted red;
 }
