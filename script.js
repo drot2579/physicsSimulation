@@ -4,24 +4,7 @@ const bounceFn = (num, absolute, ratio) => {
     let newValue = value - Math.max(absolute, value * ratio);
     return newValue < 0 ? 0 : newValue * -sign;
 }
-let logs = {}
-const bounceFn = (num, absolute, ratio) => {
-    let [value, sign] = [Math.abs(num), Math.sign(num)];
-    let newValue = value - Math.max(absolute, value * ratio);
-    return newValue < 0 ? 0 : newValue * -sign;
-}
 /* ---------- ---------- ---------- -------- ---------- ---------- ---------- */
-const canvasElement = document.querySelector("canvas");
-const cx = canvasElement.getContext("2d");
-canvasElement.width = 1200;
-canvasElement.height = 600;
-
-const canvas = {};
-canvas.pxPm = 50;
-canvas.color = "#f1f1f1"
-canvas.width = canvasElement.width / canvas.pxPm;
-canvas.height = canvasElement.height / canvas.pxPm;
-canvas.draw = (color = "green", args = [0, 0, 1, 1]) => {
 const canvasElement = document.querySelector("canvas");
 const cx = canvasElement.getContext("2d");
 canvasElement.width = 1200;
@@ -37,12 +20,7 @@ canvas.draw = (color = "green", args = [0, 0, 1, 1]) => {
     let { pxPm, height } = canvas;
     args = args.map(arg => arg * pxPm)
     cx.fillRect(args[0], height * pxPm - args[1], args[2], -args[3])
-    let { pxPm, height } = canvas;
-    args = args.map(arg => arg * pxPm)
-    cx.fillRect(args[0], height * pxPm - args[1], args[2], -args[3])
 }
-canvas.refresh = () => canvas.draw(canvas.color, [0, 0, canvas.width, canvas.height])
-
 canvas.refresh = () => canvas.draw(canvas.color, [0, 0, canvas.width, canvas.height])
 
 class Vector {
@@ -54,7 +32,6 @@ class Vector {
     constructor(x = 0, y = 0) { this.x = x; this.y = y; }
     get length() { return Math.hypot(this.x, this.y) }
     get angle() { return Math.atan2(this.y, this.x) }
-    get rad() { return this.angle / Math.PI }
     get rad() { return this.angle / Math.PI }
     get deg() { return this.rad * 180 }
 
@@ -72,8 +49,6 @@ class Vector {
     multiplyTo(n) { return new Vector(this.x * n, this.y * n) }
     divide(num) { this.x /= num; this.y /= num; }
     divideTo(n) { return new Vector(this.x / n, this.y / n) }
-
-    fixedTo(n) { return new Vector((this.x).toFixed(n), (this.y).toFixed(n)) }
 
     fixedTo(n) { return new Vector((this.x).toFixed(n), (this.y).toFixed(n)) }
 }
@@ -105,8 +80,6 @@ class Rectangle {
         this.density = 1;
         this.elasticity = 0.4;
         this.color = "#111";
-        this.area = this.size.x * this.size.y;
-        this.mass = this.area * this.density;
         this.area = this.size.x * this.size.y;
         this.mass = this.area * this.density;
     }
@@ -245,13 +218,7 @@ let r1 = new Rectangle();
 
 let framesCount = 0;
 let frameLimit = 0;
-let framesCount = 0;
-let frameLimit = 0;
 function animate() {
-    canvas.refresh()
-    r1.update()
-    r1.renderInfo()
-    if (frameLimit && framesCount > frameLimit) { return }
     canvas.refresh()
     r1.update()
     r1.renderInfo()
