@@ -11,8 +11,8 @@ canvasElement.width = 1200;
 canvasElement.height = 600;
 
 const canvas = {};
-canvas.pxPm = 50;
-canvas.color = "#f1f1f1"
+canvas.pxPm = 5;
+canvas.color = "#f1f1f108"
 canvas.width = canvasElement.width / canvas.pxPm;
 canvas.height = canvasElement.height / canvas.pxPm;
 canvas.draw = (color = "green", args = [0, 0, 1, 1]) => {
@@ -63,13 +63,11 @@ class Rectangle {
     activeForces = {
         gravity: gForce,
         user: new Vector(),
-
     };
     passiveForces = {
         counter: new Vector(),
         surfaceFriction: new Vector(),
         airFriction: new Vector(),
-
     }
     totalForce = new Vector();
     acceleration = new Vector();
@@ -110,6 +108,8 @@ class Rectangle {
         let rightSink = rightBorder > canvas.width;
         let topSink = topBorder > canvas.height;
 
+        let leftLimit = 0;
+        let bottomLimit = 0;
         let rightLimit = canvas.width - size.x;
         let topLimit = canvas.height - size.y;
 
@@ -117,8 +117,10 @@ class Rectangle {
         let rightGoing = velocity.x > 0;
         let bottomGoing = velocity.y < 0;
         let topGoing = velocity.y > 0;
-        //#endregion ---------- ---------- ----------* destructure *---------- ----------|
 
+
+
+        //#endregion ---------- ---------- ----------* destructure *---------- ----------|
 
         let startVelocity = this.velocity.multiplyTo(1)
         let activeTotal = Vector.sum(Object.values(this.activeForces))
@@ -136,11 +138,11 @@ class Rectangle {
         this.passiveForces.airFriction.set([0, 0])
         let [surfaceFrictionX, surfaceFrictionY, airFrictionX, airFrictionY] = [0, 0, 0, 0]
         if (velocity.x) {
-            if (counter.y) { surfaceFrictionX = Math.abs(counter.y) * Math.sign(velocity.x) * fricCoef.surface; }
+            if (counter.y) { surfaceFrictionX = Math.abs(counter.y) * Math.sign(velocity.x) * fricCoef.surface; };
             airFrictionX = size.y * velocity.x * fricCoef.air;
         }
         if (velocity.y) {
-            if (counter.x) { surfaceFrictionY = Math.abs(counter.x) * Math.sign(velocity.y) * fricCoef.surface; }
+            if (counter.x) { surfaceFrictionY = Math.abs(counter.x) * Math.sign(velocity.y) * fricCoef.surface; };
             airFrictionY = size.x * velocity.y * fricCoef.air;
         }
 
@@ -157,19 +159,16 @@ class Rectangle {
         if (testVelocity.x * this.velocity.x < 0) { testVelocity.x = 0 }
         if (testVelocity.y * this.velocity.y < 0) { testVelocity.y = 0 }
 
-        this.acceleration = testVelocity.subtractTo(startVelocity).divideTo(1/frameRate)
-
+        this.acceleration = testVelocity.subtractTo(startVelocity).divideTo(1 / frameRate)
         this.totalForce = this.acceleration.multiplyTo(this.mass);
-        
         this.velocity = testVelocity;
-
         this.position.add(this.velocity.divideTo(frameRate))
 
         //      overflow correction
         // position correction
-        if (leftSink) { position.x = 0; }
+        if (leftSink) { position.x = leftLimit; }
         if (rightSink) { position.x = rightLimit; }
-        if (bottomSink) { position.y = 0; }
+        if (bottomSink) { position.y = bottomLimit; }
         if (topSink) { position.y = topLimit; }
 
         // velocity correction
@@ -177,8 +176,6 @@ class Rectangle {
         if (rightTouch && rightGoing) { this.stopX() }
         if (bottomTouch && bottomGoing) { this.stopY() }
         if (topTouch && topGoing) { this.stopY() }
-
-
     }
     update() {
         this.calculate()
@@ -209,8 +206,6 @@ class Rectangle {
                 if (y < 0) { yEl.classList.add("neg") }
             }
         }
-
-
     }
 }
 
@@ -229,7 +224,11 @@ animate()
 
 //#region ---------- ---------- ----------* keys *---------- ----------|
 let keyValue = 15;
+let ts = 0;
+let gNum = 0;
+let gValues = [-10,0,-5,5]
 document.body.addEventListener("keydown", (e) => {
+    // console.log(e.key);
     if (e.key == " ") { r1.stop() }
     if (e.key == "a") { r1.activeForces.user.x = -keyValue }
     if (e.key == "d") { r1.activeForces.user.x = +keyValue }
@@ -241,6 +240,10 @@ document.body.addEventListener("keyup", (e) => {
     if (e.key == "d") { r1.activeForces.user.x = 0 }
     if (e.key == "s") { r1.activeForces.user.y = 0 }
     if (e.key == "w") { r1.activeForces.user.y = 0 }
+    if (e.key == "t") { console.timeStamp(`time`) }
+    if (e.key == "j") { console.time("time") }
+    if (e.key == "k") { console.timeLog("time") }
+    if (e.key == "l") { console.timeEnd("time") }
+    if (e.key == "g") { gForce.y = gValues[++gNum % gValues.length] }
 })
 //#endregion ---------- ---------- ----------* keys *---------- ----------|
-
