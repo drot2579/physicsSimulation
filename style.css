@@ -24,7 +24,6 @@ html {
 }
 body {
     /* height: 100dvh; */
-    overflow: hidden;
 }
 main {
     position: relative;
@@ -53,8 +52,6 @@ span {
 }
 .header {
     text-transform: uppercase;
-    width: 8.5rem;
-    margin-top: 0.25rem;
 }
 .row {
     display: flex;
@@ -65,8 +62,10 @@ span {
     & .table {
         margin-left: 3px;
         color: aqua;
+        /* padding: 0.25rem; */
     }
     & .row {
+  
         & span {
             border: 1px solid #666;
             padding: 0px 8px 0px 2px;
@@ -74,10 +73,11 @@ span {
             text-align: right;
             vertical-align: middle;
             &.arrow {
-                border: none;
-                font-size: 1.25rem;
+             border: none;   
+             font-size: 1.25rem;
             }
         }
+        /* border: 1px solid red; */
     }
     & .label {
         width: 6rem;
@@ -90,7 +90,8 @@ span {
     }
     & .arrow {
         transition: 100ms;
-        font-weight: 800;
+        /* width: 3rem; */
+        
     }
 }
 .pos {
@@ -99,18 +100,21 @@ span {
 .neg {
     color: #f00;
 }
+
 .helpTables {
     color: #bbb;
     position: absolute;
-    right: 8px;
+    right: 0;
     top: 0;
     & .helpTable {
+        width: 240px;
         & span {
             border: 1px solid #555;
         }
         .label {
             width: 5rem;
         }
+
         .key {
             width: 3.5rem;
             text-align: center;

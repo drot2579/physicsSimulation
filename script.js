@@ -7,28 +7,37 @@ const bounceFn = (num, absolute, ratio) => {
 /* ---------- ---------- ---------- -------- ---------- ---------- ---------- */
 const canvasElement = document.querySelector("canvas");
 const cx = canvasElement.getContext("2d");
-canvasElement.width = 1532;
-canvasElement.height = 620;
+canvasElement.width = 1500  ;
+canvasElement.height = 600;
 
-const canvas = {
-    pxPm: 15,
-    color: "#f1f1f1",
-    get width() { return canvasElement.width / this.pxPm; },
-    get height() { return canvasElement.height / this.pxPm; },
-    draw(color = "green", args = [0, 0, 1, 1]) {
-        args.forEach((arg, idx) => args[idx] = arg * canvas.pxPm)
+const canvas = {};
+canvas.pxPm = 15;
+canvas.color = "#f1f1f108"
+canvas.width = canvasElement.width / canvas.pxPm;
+canvas.height = canvasElement.height / canvas.pxPm;
+canvas.draw = (color = "green", args = [0, 0, 1, 1]) => {
     cx.fillStyle = color;
-        cx.fillRect(args[0], canvas.height * canvas.pxPm - args[1], args[2], -args[3])
-    },
-    refresh() { canvas.draw(canvas.color, [0, 0, canvas.width, canvas.height]) },
-};
+    let { pxPm, height } = canvas;
+    args = args.map(arg => arg * pxPm)
+    cx.fillRect(args[0], height * pxPm - args[1], args[2], -args[3])
+}
+canvas.refresh = () => canvas.draw(canvas.color, [0, 0, canvas.width, canvas.height])
 
 class Vector {
-    static sum(vectors) { return vectors.reduce((a, c) => a.addTo(c)) }
+    static sum(vectors) {
+        let [x, y] = [0, 0];
+        for (const vector of vectors) { x += vector.x; y += vector.y; }
+        return new Vector(x, y)
+    }
     constructor(x = 0, y = 0) { this.x = x; this.y = y; }
     get length() { return Math.hypot(this.x, this.y) }
-    get deg() { return Math.atan2(this.y, this.x) / Math.PI * 180 }
+    get angle() { return Math.atan2(this.y, this.x) }
+    get rad() { return this.angle / Math.PI }
+    get deg() { return this.rad * 180 }
+
     get values() { return [this.x, this.y] }
+    get entries() { return { x: this.x, y: this.y } }
+
     set(xy) { let [x, y] = Object.values(xy); this.x = x; this.y = y; }
     add(xy) { let [x, y] = Object.values(xy); this.x += x; this.y += y; }
     subtract(xy) { let [x, y] = Object.values(xy); this.x -= x; this.y -= y; }
@@ -43,14 +52,8 @@ class Vector {
 
 }
 
-let frame = {
-    rate: 60,
-    count: 0,
-}
+let frameRate = 60;
 let gForce = new Vector(0, -10)
-const coef = {
-    friction: { air: -0.05, surface: -0.8 },
-}
 let fricCoef = {
     air: -0.05,
     surface: -0.8
