@@ -23,11 +23,23 @@ html {
     font-size: 17px;
 }
 body {
-    height: 100dvh;
+    /* height: 100dvh; */
 }
 main {
     position: relative;
-    /* background-color: #f00; */
+}
+.logo {
+    & img {
+        height: 2rem;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 50%;
+        z-index: 1;
+        &:hover {
+            opacity: 70%;
+        }
+    }
 }
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -35,37 +47,82 @@ span {
     display: inline-block;
     transition: 250ms;
 }
+.label {
+    text-transform: capitalize;
+}
+.header {
+    text-transform: uppercase;
+}
+.row {
+    display: flex;
+}
 .tables {
     display: flex;
     flex-direction: row;
     & .table {
         margin-left: 3px;
         color: aqua;
-        padding: 0.25rem;
+        /* padding: 0.25rem; */
     }
     & .row {
-        display: flex;
+  
         & span {
             border: 1px solid #666;
-            padding: 1px 8px 1px 2px;
+            padding: 0px 8px 0px 2px;
             margin: 0;
             text-align: right;
+            vertical-align: middle;
+            &.arrow {
+             border: none;   
+             font-size: 1.25rem;
+            }
         }
         /* border: 1px solid red; */
     }
-    & .name {
+    & .label {
         width: 6rem;
-        text-transform: capitalize;
     }
     & .x, & .y {
         width: 3rem;
+    }
+    & .length {
+        width: 3rem;
+    }
+    & .arrow {
+        transition: 100ms;
+        /* width: 3rem; */
+        
     }
 }
 .pos {
     color: #0f0;
 }
 .neg {
-    color: rgb(255, 0, 0);
+    color: #f00;
+}
+
+.helpTables {
+    color: #bbb;
+    position: absolute;
+    right: 0;
+    top: 0;
+    & .helpTable {
+        width: 240px;
+        & span {
+            border: 1px solid #555;
+        }
+        .label {
+            width: 5rem;
+        }
+
+        .key {
+            width: 3.5rem;
+            text-align: center;
+        }
+    }
+}
+.fade {
+    color: #666;
 }
 body * {
     /* border: 1px dotted red; */

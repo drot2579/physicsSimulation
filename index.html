@@ -2,116 +2,143 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta label="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <title>Physics Simulation</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body>
+    <a class="logo" href="http://drotcode.github.io/home/" target="_blank" rel="noopener noreferrer">
+        <img src="./drot_nogrid_smaller_greyblue.png" alt="drot logo">
+    </a>
     <nav></nav>
     <main>
         <canvas></canvas>
         <div class="tables">
             <div class="table table1">
-                <div class="velocity row">
-                    <span class="name">velocity</span>
+                <div class="position row">
                     <span class="x"></span>
                     <span class="y"></span>
+                    <span class="label">position</span>
+                    <span class="length">000</span>
+                    <span class="arrow">&RightArrow;</span>
+                </div>
+                <div class="space row">
+                    <span class="x"></span>
+                    <span class="y"></span>
+                    <span class="label">-</span>
+                    <span class="length"></span>
+                    <span class="arrow"></span>
+                </div>
+                <div class="velocity row">
+                    <span class="x"></span>
+                    <span class="y"></span>
+                    <span class="label">velocity</span>
+                    <span class="length">000</span>
+                    <span class="arrow">&RightArrow;</span>
                 </div>
                 <div class="acceleration row">
-                    <span class="name">acceleration</span>
                     <span class="x"></span>
                     <span class="y"></span>
+                    <span class="label">acceleration</span>
+                    <span class="length">000</span>
+                    <span class="arrow">&RightArrow;</span>
                 </div>
-                <div class="position row">
-                    <span class="name">position</span>
-                    <span class="x"></span>
-                    <span class="y"></span>
-                </div>
+
             </div>
             <div class="table table2">
                 <div class="user row">
-                    <span class="name">user</span>
                     <span class="x"></span>
                     <span class="y"></span>
+                    <span class="label">user</span>
+                    <span class="length">000</span>
+                    <span class="arrow">&RightArrow;</span>
                 </div>
                 <div class="airFriction row">
-                    <span class="name">air fric.</span>
                     <span class="x"></span>
                     <span class="y"></span>
+                    <span class="label">air fric.</span>
+                    <span class="length">000</span>
+                    <span class="arrow">&RightArrow;</span>
                 </div>
                 <div class="surfaceFriction row">
-                    <span class="name">surface fric.</span>
                     <span class="x"></span>
                     <span class="y"></span>
+                    <span class="label">surface fric.</span>
+                    <span class="length">000</span>
+                    <span class="arrow">&RightArrow;</span>
                 </div>
                 <div class="counter row">
-                    <span class="name">counter</span>
                     <span class="x"></span>
                     <span class="y"></span>
+                    <span class="label">counter</span>
+                    <span class="length">000</span>
+                    <span class="arrow">&RightArrow;</span>
                 </div>
                 <div class="gravity row">
-                    <span class="name">gravity</span>
                     <span class="x"></span>
                     <span class="y"></span>
+                    <span class="label">gravity</span>
+                    <span class="length">000</span>
+                    <span class="arrow">&RightArrow;</span>
                 </div>
                 <div class="totalForce row">
-                    <span class="name">total force</span>
                     <span class="x"></span>
                     <span class="y"></span>
+                    <span class="label">total force</span>
+                    <span class="length">000</span>
+                    <span class="arrow">&RightArrow;</span>
                 </div>
             </div>
-            <div class="table table3">
+
+        </div>
+        <div class="helpTables">
+            <div class="helpTable one">
                 <div class=" row">
-                    <span class="name">apply force</span>
-                    <span class="x">Left</span>
-                    <span class="y">A</span>
+                    <span class="header">apply force</span>
                 </div>
                 <div class=" row">
-                    <span class="name">apply force</span>
-                    <span class="x">Right</span>
-                    <span class="y">D</span>
+                    <span class="label">Left</span>
+                    <span class="key">A</span>
                 </div>
                 <div class=" row">
-                    <span class="name">apply force</span>
-                    <span class="x">Up</span>
-                    <span class="y">W</span>
+                    <span class="label">Right</span>
+                    <span class="key">D</span>
                 </div>
                 <div class=" row">
-                    <span class="name">apply force</span>
-                    <span class="x">Down</span>
-                    <span class="y">S</span>
+                    <span class="label">Up</span>
+                    <span class="key">W</span>
                 </div>
                 <div class=" row">
-                    <span class="name">stop</span>
-                    <span class="x"></span>
-                    <span class="y">Space</span>
+                    <span class="label">Down</span>
+                    <span class="key">S</span>
                 </div>
                 <div class=" row">
-                    <span class="name">change</span>
-                    <span class="x">gForce</span>
-                    <span class="y">G</span>
+                    <span class="label">stop</span>
+                    <span class="key">Space</span>
                 </div>
-                
+                <div class=" row">
+                    <span class="label">change gravity</span>
+                    <span class="key">G</span>
+                </div>
             </div>
-            <div class="table table4">
+            <div class="helpTable two">
                 <div class=" row">
-                    <span class="name">time</span>
-                    <span class="x">Start</span>
-                    <span class="y">J</span>
+                    <span class="header">time</span>
                 </div>
                 <div class=" row">
-                    <span class="name">time</span>
-                    <span class="x">Log</span>
-                    <span class="y">K</span>
+                    <span class="label">Start</span>
+                    <span class="key">J</span>
                 </div>
                 <div class=" row">
-                    <span class="name">time</span>
-                    <span class="x">End</span>
-                    <span class="y">L</span>
+                    <span class="label">Log</span>
+                    <span class="key">K</span>
                 </div>
-                
+                <div class=" row">
+                    <span class="label">End</span>
+                    <span class="key">L</span>
+                </div>
             </div>
         </div>
     </main>

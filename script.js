@@ -7,11 +7,11 @@ const bounceFn = (num, absolute, ratio) => {
 /* ---------- ---------- ---------- -------- ---------- ---------- ---------- */
 const canvasElement = document.querySelector("canvas");
 const cx = canvasElement.getContext("2d");
-canvasElement.width = 1200;
+canvasElement.width = 1500  ;
 canvasElement.height = 600;
 
 const canvas = {};
-canvas.pxPm = 5;
+canvas.pxPm = 15;
 canvas.color = "#f1f1f108"
 canvas.width = canvasElement.width / canvas.pxPm;
 canvas.height = canvasElement.height / canvas.pxPm;
@@ -50,14 +50,13 @@ class Vector {
     divide(num) { this.x /= num; this.y /= num; }
     divideTo(n) { return new Vector(this.x / n, this.y / n) }
 
-    fixedTo(n) { return new Vector((this.x).toFixed(n), (this.y).toFixed(n)) }
 }
 
 let frameRate = 60;
 let gForce = new Vector(0, -10)
 let fricCoef = {
-    air: -0.1,
-    surface: -0.4
+    air: -0.05,
+    surface: -0.8
 }
 class Rectangle {
     activeForces = {
@@ -181,7 +180,7 @@ class Rectangle {
         this.calculate()
         this.draw()
     }
-    renderInfo() {
+    displayInfo() {
         let { position, velocity, acceleration, activeForces: { gravity, user },
             passiveForces: { counter, airFriction, surfaceFriction }, totalForce } = this;
         let tables = {
@@ -193,17 +192,23 @@ class Rectangle {
             const table = tables[tableName]
 
             for (const propName in table) {
-                const { x, y } = table[propName].fixedTo(1);
-                let xEl = document.querySelector(`.${tableName}>.row.${propName}>.x`)
-                let yEl = document.querySelector(`.${tableName}>.row.${propName}>.y`)
-                xEl.innerText = x;
+                const { x, y ,length,deg} = table[propName];
+                let xEl = document.querySelector(`.${propName}>.x`)
+                let yEl = document.querySelector(`.${propName}>.y`)
+                let lengthEl = document.querySelector(`.${propName}>.length`)
+                let arrowEl = document.querySelector(`.${propName}>.arrow`)
+                xEl.innerText = x.toFixed(1);
                 xEl.classList.remove("pos", "neg")
                 if (x > 0) { xEl.classList.add("pos") }
                 if (x < 0) { xEl.classList.add("neg") }
-                yEl.innerText = y;
+                yEl.innerText = y.toFixed(1);
                 yEl.classList.remove("pos", "neg")
                 if (y > 0) { yEl.classList.add("pos") }
                 if (y < 0) { yEl.classList.add("neg") }
+
+                lengthEl.innerText = length.toFixed(1);
+                arrowEl.classList[length ? "remove" : "add"]("fade")
+                arrowEl.style.rotate = -deg + "deg";
             }
         }
     }
@@ -216,7 +221,7 @@ let frameLimit = 0;
 function animate() {
     canvas.refresh()
     r1.update()
-    r1.renderInfo()
+    r1.displayInfo()
     if (frameLimit && framesCount > frameLimit) { return }
     window.requestAnimationFrame(animate)
 }
