@@ -7,36 +7,27 @@ const bounceFn = (num, absolute, ratio) => {
 /* ---------- ---------- ---------- -------- ---------- ---------- ---------- */
 const canvasElement = document.querySelector("canvas");
 const cx = canvasElement.getContext("2d");
-canvasElement.width = 1500  ;
-canvasElement.height = 600;
+canvasElement.width = 1532;
+canvasElement.height = 620;
 
-const canvas = {};
-canvas.pxPm = 15;
-canvas.color = "#f1f1f108"
-canvas.width = canvasElement.width / canvas.pxPm;
-canvas.height = canvasElement.height / canvas.pxPm;
-canvas.draw = (color = "green", args = [0, 0, 1, 1]) => {
-    cx.fillStyle = color;
-    let { pxPm, height } = canvas;
-    args = args.map(arg => arg * pxPm)
-    cx.fillRect(args[0], height * pxPm - args[1], args[2], -args[3])
-}
-canvas.refresh = () => canvas.draw(canvas.color, [0, 0, canvas.width, canvas.height])
+const canvas = {
+    pxPm: 15,
+    color: "#f1f1f1",
+    get width() { return canvasElement.width / canvas.pxPm },
+    get height() { return canvasElement.height / canvas.pxPm },
+    draw(color, args) {
+        cx.fillStyle = color;
+        args = args.map(arg => arg * canvas.pxPm)
+        cx.fillRect(args[0], canvas.height * canvas.pxPm - args[1], args[2], -args[3])
+    },
+    refresh() { canvas.draw(canvas.color, [0, 0, canvas.width, canvas.height]) }
+};
 
 class Vector {
-    static sum(vectors) {
-        let [x, y] = [0, 0];
-        for (const vector of vectors) { x += vector.x; y += vector.y; }
-        return new Vector(x, y)
-    }
+    static sum(vectors) { return vectors.reduce((a, c) => a.addTo(c)) }
     constructor(x = 0, y = 0) { this.x = x; this.y = y; }
     get length() { return Math.hypot(this.x, this.y) }
-    get angle() { return Math.atan2(this.y, this.x) }
-    get rad() { return this.angle / Math.PI }
-    get deg() { return this.rad * 180 }
-
-    get values() { return [this.x, this.y] }
-    get entries() { return { x: this.x, y: this.y } }
+    get degree() { return Math.atan2(this.y, this.x) / Math.PI * 180 }
 
     set(xy) { let [x, y] = Object.values(xy); this.x = x; this.y = y; }
     add(xy) { let [x, y] = Object.values(xy); this.x += x; this.y += y; }
@@ -80,7 +71,7 @@ class Rectangle {
         this.area = this.size.x * this.size.y;
         this.mass = this.area * this.density;
     }
-    draw() { canvas.draw(this.color, [...this.position.values, ...this.size.values]) }
+    draw() { canvas.draw(this.color, [this.position.x,this.position.y, this.size.x,this.size.y]) }
     stopX() { this.velocity.x = 0; }
     stopY() { this.velocity.y = 0; }
     stop() { this.velocity.set([0, 0]) }
@@ -192,7 +183,7 @@ class Rectangle {
             const table = tables[tableName]
 
             for (const propName in table) {
-                const { x, y ,length,deg} = table[propName];
+                const { x, y, length, degree } = table[propName];
                 let xEl = document.querySelector(`.${propName}>.x`)
                 let yEl = document.querySelector(`.${propName}>.y`)
                 let lengthEl = document.querySelector(`.${propName}>.length`)
@@ -208,7 +199,7 @@ class Rectangle {
 
                 lengthEl.innerText = length.toFixed(1);
                 arrowEl.classList[length ? "remove" : "add"]("fade")
-                arrowEl.style.rotate = -deg + "deg";
+                arrowEl.style.rotate = -degree + "deg";
             }
         }
     }
@@ -231,7 +222,7 @@ animate()
 let keyValue = 15;
 let ts = 0;
 let gNum = 0;
-let gValues = [-10,0,-5,5]
+let gValues = [-10, 0, -5, 5]
 document.body.addEventListener("keydown", (e) => {
     // console.log(e.key);
     if (e.key == " ") { r1.stop() }

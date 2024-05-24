@@ -23,7 +23,7 @@ html {
     font-size: 17px;
 }
 body {
-    /* height: 100dvh; */
+    overflow: hidden;
 }
 main {
     position: relative;
@@ -62,10 +62,8 @@ span {
     & .table {
         margin-left: 3px;
         color: aqua;
-        /* padding: 0.25rem; */
     }
     & .row {
-  
         & span {
             border: 1px solid #666;
             padding: 0px 8px 0px 2px;
@@ -73,11 +71,10 @@ span {
             text-align: right;
             vertical-align: middle;
             &.arrow {
-             border: none;   
-             font-size: 1.25rem;
+                border: none;
+                font-size: 1.25rem;
             }
         }
-        /* border: 1px solid red; */
     }
     & .label {
         width: 6rem;
@@ -90,8 +87,6 @@ span {
     }
     & .arrow {
         transition: 100ms;
-        /* width: 3rem; */
-        
     }
 }
 .pos {
@@ -100,7 +95,6 @@ span {
 .neg {
     color: #f00;
 }
-
 .helpTables {
     color: #bbb;
     position: absolute;
@@ -114,7 +108,6 @@ span {
         .label {
             width: 5rem;
         }
-
         .key {
             width: 3.5rem;
             text-align: center;
