@@ -7,21 +7,31 @@ const bounceFn = (num, absolute, ratio) => {
 /* ---------- ---------- ---------- -------- ---------- ---------- ---------- */
 const canvasElement = document.querySelector("canvas");
 const cx = canvasElement.getContext("2d");
-canvasElement.width = 1500  ;
+// cancas size in pixels
+canvasElement.width = 1200  ;
 canvasElement.height = 600;
 
+// cancas size in meters
 const canvas = {};
-canvas.pxPm = 15;
-canvas.color = "#f1f1f108"
-canvas.width = canvasElement.width / canvas.pxPm;
-canvas.height = canvasElement.height / canvas.pxPm;
-canvas.draw = (color = "green", args = [0, 0, 1, 1]) => {
+canvas.ppm = 15;
+canvas.color = "#f1f1f1"
+canvas.width = canvasElement.width / canvas.ppm;
+canvas.height = canvasElement.height / canvas.ppm;
+canvas.draw = (color = "green", px,py, sx, sy) => {
     cx.fillStyle = color;
-    let { pxPm, height } = canvas;
-    args = args.map(arg => arg * pxPm)
-    cx.fillRect(args[0], height * pxPm - args[1], args[2], -args[3])
+    px *= canvas.ppm;
+    py *= canvas.ppm;
+    sx *= canvas.ppm;
+    sy *= canvas.ppm;
+    cx.fillRect(px, canvas.height * canvas.ppm - py, sx, -sy)
 }
-canvas.refresh = () => canvas.draw(canvas.color, [0, 0, canvas.width, canvas.height])
+// canvas.draw = (color = "green", args = [0, 0, 1, 1]) => {
+//     cx.fillStyle = color;
+//     let { ppm, height } = canvas;
+//     args = args.map(arg => arg * ppm)
+//     cx.fillRect(args[0], height * ppm - args[1], args[2], -args[3])
+// }
+canvas.refresh = () => canvas.draw(canvas.color, 0, 0, canvas.width, canvas.height)
 
 class Vector {
     static sum(vectors) {
@@ -31,9 +41,7 @@ class Vector {
     }
     constructor(x = 0, y = 0) { this.x = x; this.y = y; }
     get length() { return Math.hypot(this.x, this.y) }
-    get angle() { return Math.atan2(this.y, this.x) }
-    get rad() { return this.angle / Math.PI }
-    get deg() { return this.rad * 180 }
+    get deg() { return Math.atan2(this.y, this.x) / Math.PI * 180 }
 
     get values() { return [this.x, this.y] }
     get entries() { return { x: this.x, y: this.y } }
@@ -80,7 +88,7 @@ class Rectangle {
         this.area = this.size.x * this.size.y;
         this.mass = this.area * this.density;
     }
-    draw() { canvas.draw(this.color, [...this.position.values, ...this.size.values]) }
+    draw() { canvas.draw(this.color, ...this.position.values, ...this.size.values) }
     stopX() { this.velocity.x = 0; }
     stopY() { this.velocity.y = 0; }
     stop() { this.velocity.set([0, 0]) }
@@ -89,8 +97,8 @@ class Rectangle {
     calculate() {
 
         //#region ---------- ---------- ----------* destructure *---------- ----------|
-        let { position, totalForce, velocity, size,
-            passiveForces: { counter, surfaceFriction, airFriction } } = this;
+        let { position, velocity, size,
+            passiveForces: { counter} } = this;
 
         let leftBorder = position.x
         let bottomBorder = position.y
@@ -181,8 +189,9 @@ class Rectangle {
         this.draw()
     }
     displayInfo() {
-        let { position, velocity, acceleration, activeForces: { gravity, user },
-            passiveForces: { counter, airFriction, surfaceFriction }, totalForce } = this;
+        let { position, velocity, acceleration, totalForce } = this;
+        let { counter, airFriction, surfaceFriction } = this.passiveForces;
+        let { gravity, user } =  this.activeForces;
         let tables = {
             table1: { position, velocity, acceleration, },
             table2: { user, gravity, counter, airFriction, surfaceFriction, totalForce },
@@ -245,10 +254,10 @@ document.body.addEventListener("keyup", (e) => {
     if (e.key == "d") { r1.activeForces.user.x = 0 }
     if (e.key == "s") { r1.activeForces.user.y = 0 }
     if (e.key == "w") { r1.activeForces.user.y = 0 }
-    if (e.key == "t") { console.timeStamp(`time`) }
-    if (e.key == "j") { console.time("time") }
-    if (e.key == "k") { console.timeLog("time") }
-    if (e.key == "l") { console.timeEnd("time") }
+
+    if (e.key == "t") { console.time("time") }
+    if (e.key == "y") { console.timeLog("time") }
+    if (e.key == "u") { console.timeEnd("time") }
     if (e.key == "g") { gForce.y = gValues[++gNum % gValues.length] }
 })
 //#endregion ---------- ---------- ----------* keys *---------- ----------|
